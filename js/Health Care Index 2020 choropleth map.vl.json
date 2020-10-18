@@ -1,0 +1,40 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title": "Health Care Index 2020",
+  "width": 700,
+  "height": 600,
+  "projection": {"type": "equirectangular"},
+  "data": {
+    "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/js/all.geo.topojson",
+    "format": {"type": "topojson", "feature": "all.geo"}
+  },
+  "transform": [
+    {
+      "lookup": "properties.admin",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/covid19_data%20-%20health.csv"
+        },
+        "key": "Country",
+        "fields": ["Health_Care_Index"]
+      }
+    }
+  ],
+  "mark": {"type": "geoshape"},
+  "encoding": {
+    "color": {
+      "field": "Health_Care_Index",
+      "type": "quantitative",
+      "scale": {
+        "type": "threshold",
+        "domain": [35, 60, 75],
+        "range": ["#cfe3d0", "#afdbb2", "#5cd664", "#008f09"]
+      }
+    },
+    "tooltip": [
+      {"field": "properties.admin", "type": "nominal", "title": "Country"},
+      {"field": "Health_Care_Index", "type": "quantitative"}
+    ]
+  },
+  "config": {}
+}
