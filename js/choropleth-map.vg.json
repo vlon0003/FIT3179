@@ -1,0 +1,86 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 700,
+  "height": 600,
+  "title": {"text": "Health Care Index 2020", "frame": "group"},
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_1",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/covid19_data%20-%20health.csv",
+      "format": {"type": "csv", "delimiter": ","}
+    },
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/js/all.geo.topojson",
+      "format": {"type": "topojson", "feature": "all.geo", "parse": {}},
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "datum[\"properties\"] && datum[\"properties\"][\"admin\"]",
+          "as": "properties.admin"
+        },
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "Country",
+          "fields": ["properties.admin"],
+          "values": ["Health_Care_Index"]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"Health_Care_Index\"]) && isFinite(+datum[\"Health_Care_Index\"])"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[width, height]"},
+      "fit": {"signal": "data('source_0')"},
+      "type": "equirectangular"
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "fill": {"scale": "color", "field": "Health_Care_Index"},
+          "tooltip": {
+            "signal": "{\"Country\": isValid(datum[\"properties.admin\"]) ? datum[\"properties.admin\"] : \"\"+datum[\"properties.admin\"], \"Health_Care_Index\": format(datum[\"Health_Care_Index\"], \"\")}"
+          },
+          "ariaRoleDescription": {"value": "geoshape"},
+          "description": {
+            "signal": "\"Health_Care_Index: \" + (format(datum[\"Health_Care_Index\"], \"\")) + \"; Country: \" + (isValid(datum[\"properties.admin\"]) ? datum[\"properties.admin\"] : \"\"+datum[\"properties.admin\"])"
+          }
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "threshold",
+      "domain": [35, 60, 75],
+      "range": ["#cfe3d0", "#afdbb2", "#5cd664", "#008f09"],
+      "interpolate": "hcl"
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "labelOverlap": "greedy",
+      "symbolType": "circle",
+      "title": "Health_Care_Index"
+    }
+  ],
+  "config": {}
+}
