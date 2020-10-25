@@ -1,0 +1,201 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 700,
+  "height": 450,
+  "title": {
+    "text": "Top 10 Countries with Highest Health Care Index During spread of COVID-19",
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/COVID%20HEALTH.csv",
+      "format": {
+        "type": "csv",
+        "parse": {"Health_Care_Index": "number"},
+        "delimiter": ","
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "Country_selection == null || datum.Country == Country_selection"
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Country", "Health_Care_Index"],
+          "ops": ["sum"],
+          "fields": ["Health_Care_Index"],
+          "as": ["sum_Health_Care_Index"]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"sum_Health_Care_Index\"]) && isFinite(+datum[\"sum_Health_Care_Index\"])"
+        }
+      ]
+    },
+    {
+      "name": "data_1",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": [],
+          "ops": ["max"],
+          "fields": ["Health_Care_Index"],
+          "as": ["max_Health_Care_Index"]
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "Country_selection",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "Australia",
+          "Austria",
+          "Denmark",
+          "France",
+          "Japan",
+          "South Korea",
+          "Spain",
+          "Taiwan",
+          "Thailand"
+        ],
+        "labels": [
+          "Show All",
+          "Australia",
+          "Austria",
+          "Denmark",
+          "France",
+          "Japan",
+          "South Korea",
+          "Spain",
+          "Taiwan",
+          "Thailand"
+        ],
+        "name": "Country Selection: "
+      }
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "rect",
+      "style": ["bar"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "fill": {"scale": "color", "field": "Country"},
+          "tooltip": {
+            "signal": "{\"Country\": isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"], \"Health Care Index\": format(datum[\"Health_Care_Index\"], \",\")}"
+          },
+          "ariaRoleDescription": {"value": "bar"},
+          "description": {
+            "signal": "\"Health Care Index: \" + (format(datum[\"sum_Health_Care_Index\"], \"\")) + \"; Country: \" + (isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"])"
+          },
+          "x": {"scale": "x", "field": "Country"},
+          "width": {"scale": "x", "band": 1},
+          "y": {"scale": "y", "field": "sum_Health_Care_Index"},
+          "y2": {"scale": "y", "value": 0}
+        }
+      }
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": 220},
+          "dy": {"value": -215},
+          "fontSize": {"value": 14},
+          "fontStyle": {"value": "italic"},
+          "fill": {"value": "black"},
+          "description": {
+            "signal": "\"Max of Health_Care_Index: \" + (format(datum[\"max_Health_Care_Index\"], \",\"))"
+          },
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "text": {"signal": "format(datum[\"max_Health_Care_Index\"], \",\")"}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "band",
+      "domain": {"data": "data_0", "field": "Country", "sort": true},
+      "range": [0, {"signal": "width"}],
+      "paddingInner": 0.1,
+      "paddingOuter": 0.05
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {"data": "data_0", "field": "sum_Health_Care_Index"},
+      "range": [{"signal": "height"}, 0],
+      "padding": 10,
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "data_0", "field": "Country", "sort": true},
+      "range": "category"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Country",
+      "labelAlign": "right",
+      "labelAngle": 270,
+      "labelBaseline": "middle",
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Health Care Index",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [{"fill": "color", "symbolType": "square", "title": "Country"}],
+  "config": {}
+}
