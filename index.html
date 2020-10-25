@@ -10,10 +10,22 @@
   <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
 </head>
 <body>
+<h1>Health Care Index for different countries during COVID-19</h1>
+
+<h2>This is the first visualisation</h2>
 <div id="choropleth-map"></div>
+
+<h2>This is the second visualisation</h2>
+<div id="BarChart"></div>  
+  
 <script type="text/javascript">
   var spec2 = "js/choropleth-map.vg.json";
   vegaEmbed('#choropleth-map', spec2).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+  
+  var spec3 = "js/BarChart.vg.json";
+  vegaEmbed('#BarChart', spec3).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 </script>
