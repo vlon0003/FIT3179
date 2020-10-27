@@ -3,7 +3,7 @@
   "background": "#f8fcfd",
   "padding": 5,
   "width": 400,
-  "height": 600,
+  "height": 400,
   "title": {"text": "Total Crime Cases in India - 2010", "frame": "group"},
   "style": "cell",
   "data": [
