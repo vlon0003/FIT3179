@@ -1,0 +1,191 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A ranged dot plot that uses 'layer' to convey changing life expectancy for the five most populous countries (between 1955 and 2000).",
+  "background": "white",
+  "padding": 5,
+  "width": 800,
+  "height": 600,
+  "title": {
+    "text": "Comparison of total number of cases on trial against women for 2009 and 2010 ",
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/Total_Crimes_Against_Women_2009-2010.csv",
+      "format": {
+        "type": "csv",
+        "parse": {"Area": "string", "Year": "number"},
+        "delimiter": ","
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "indexof([\"Maharashtra\",\"West Bengal\",\"Andhra Pradesh\",\"Rajasthan\",\"Odisha\"], datum[\"Area\"]) !== -1"
+        },
+        {
+          "type": "filter",
+          "expr": "indexof([2009,2010], datum[\"Year\"]) !== -1"
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"Total_Cases_for_Trial\"]) && isFinite(+datum[\"Total_Cases_for_Trial\"])"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_pathgroup",
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "faceted_path_layer_0_main",
+          "data": "source_0",
+          "groupby": ["Area"]
+        }
+      },
+      "encode": {
+        "update": {
+          "width": {"field": {"group": "width"}},
+          "height": {"field": {"group": "height"}}
+        }
+      },
+      "marks": [
+        {
+          "name": "layer_0_marks",
+          "type": "line",
+          "style": ["line"],
+          "sort": {"field": "datum[\"Area\"]"},
+          "from": {"data": "faceted_path_layer_0_main"},
+          "encode": {
+            "update": {
+              "stroke": {"value": "#db646f"},
+              "tooltip": {
+                "signal": "{\"Total Cases For Trial\": format(datum[\"Total_Cases_for_Trial\"], \"\"), \"Area\": isValid(datum[\"Area\"]) ? datum[\"Area\"] : \"\"+datum[\"Area\"]}"
+              },
+              "description": {
+                "signal": "\"Total Cases on Trial: \" + (format(datum[\"Total_Cases_for_Trial\"], \"\")) + \"; State: \" + (isValid(datum[\"Area\"]) ? datum[\"Area\"] : \"\"+datum[\"Area\"]) + \"; Total Cases For Trial: \" + (format(datum[\"Total_Cases_for_Trial\"], \"\")) + \"; Area: \" + (isValid(datum[\"Area\"]) ? datum[\"Area\"] : \"\"+datum[\"Area\"])"
+              },
+              "x": {"scale": "x", "field": "Total_Cases_for_Trial"},
+              "y": {"scale": "y", "field": "Area"},
+              "defined": {
+                "signal": "isValid(datum[\"Total_Cases_for_Trial\"]) && isFinite(+datum[\"Total_Cases_for_Trial\"])"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "opacity": {"value": 1},
+          "fill": {"scale": "color", "field": "Year"},
+          "tooltip": {
+            "signal": "{\"Total Cases For Trial\": format(datum[\"Total_Cases_for_Trial\"], \"\"), \"Area\": isValid(datum[\"Area\"]) ? datum[\"Area\"] : \"\"+datum[\"Area\"]}"
+          },
+          "ariaRoleDescription": {"value": "point"},
+          "description": {
+            "signal": "\"Total Cases on Trial: \" + (format(datum[\"Total_Cases_for_Trial\"], \"\")) + \"; State: \" + (isValid(datum[\"Area\"]) ? datum[\"Area\"] : \"\"+datum[\"Area\"]) + \"; Total Cases For Trial: \" + (format(datum[\"Total_Cases_for_Trial\"], \"\")) + \"; Area: \" + (isValid(datum[\"Area\"]) ? datum[\"Area\"] : \"\"+datum[\"Area\"]) + \"; Year: \" + (isValid(datum[\"Year\"]) ? datum[\"Year\"] : \"\"+datum[\"Year\"])"
+          },
+          "x": {"scale": "x", "field": "Total_Cases_for_Trial"},
+          "y": {"scale": "y", "field": "Area"},
+          "size": {"value": 50}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": {
+        "fields": [
+          {"data": "source_0", "field": "Total_Cases_for_Trial"},
+          {"data": "data_0", "field": "Total_Cases_for_Trial"}
+        ]
+      },
+      "range": [0, {"signal": "width"}],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "y",
+      "type": "point",
+      "domain": {
+        "fields": [
+          {"data": "source_0", "field": "Area"},
+          {"data": "data_0", "field": "Area"}
+        ],
+        "sort": true
+      },
+      "range": [0, {"signal": "height"}],
+      "padding": 0.5
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": [2009, 2010],
+      "range": ["#e6959c", "#911a24"],
+      "interpolate": "hcl"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Total Cases on Trial",
+      "labelFlush": true,
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "State",
+      "domain": false,
+      "minExtent": 70,
+      "offset": 5,
+      "ticks": false,
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "title": "Year",
+      "fill": "color",
+      "symbolType": "circle",
+      "encode": {"symbols": {"update": {"opacity": {"value": 1}}}}
+    }
+  ],
+  "config": {}
+}
