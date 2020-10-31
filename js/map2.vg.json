@@ -1,0 +1,201 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 400,
+  "height": 600,
+  "title": {"text": "Total Crime Cases India", "frame": "group"},
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_1",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/Total_Cases.csv",
+      "format": {"type": "csv", "delimiter": ","}
+    },
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/js/india_states_1.topojson",
+      "format": {"type": "topojson", "feature": "india_states_1", "parse": {}},
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "datum[\"properties\"] && datum[\"properties\"][\"ST_NM\"]",
+          "as": "properties.ST_NM"
+        },
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "STATE",
+          "fields": ["properties.ST_NM"],
+          "values": ["Cases_by_population"]
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"Cases_by_population\"]) && isFinite(+datum[\"Cases_by_population\"])"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[width, height]"},
+      "fit": {"signal": "data('data_0')"},
+      "type": "mercator"
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "fill": [
+            {"test": "datum['Cases_by_population'] < 0", "value": "#808080"},
+            {"scale": "color", "field": "Cases_by_population"}
+          ],
+          "tooltip": {
+            "signal": "{\"Area\": isValid(datum[\"properties.ST_NM\"]) ? datum[\"properties.ST_NM\"] : \"\"+datum[\"properties.ST_NM\"], \"Total Cases by population\": format(datum[\"Cases_by_population\"], \"\")}"
+          },
+          "ariaRoleDescription": {"value": "geoshape"},
+          "description": {
+            "signal": "\"Total Cases Rate by Population: \" + (format(datum[\"Cases_by_population\"], \"\")) + \"; Area: \" + (isValid(datum[\"properties.ST_NM\"]) ? datum[\"properties.ST_NM\"] : \"\"+datum[\"properties.ST_NM\"]) + \"; Total Cases by population: \" + (format(datum[\"Cases_by_population\"], \"\"))"
+          }
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": -20},
+          "dy": {"value": -140},
+          "fill": {"value": "black"},
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "text": [
+            {
+              "test": "datum['Cases_by_population'] < 0",
+              "value": "Highest Crime Rate: Delhi"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "layer_2_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": -190},
+          "dy": {"value": 230},
+          "fill": {"value": "black"},
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "text": [
+            {
+              "test": "datum['Cases_by_population'] < 0",
+              "value": "Lowest Crime Rate: Lakshadweep"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "layer_3_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": 0},
+          "dy": {"value": -110},
+          "angle": {"value": -40},
+          "fill": {"value": "black"},
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "text": [
+            {
+              "test": "datum['Cases_by_population'] < 0",
+              "value": "---------------------"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "layer_4_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": -140},
+          "dy": {"value": 190},
+          "fill": {"value": "black"},
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "text": [{"test": "datum['Cases_by_population'] < 0", "value": "⦿"}]
+        }
+      }
+    },
+    {
+      "name": "layer_5_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "align": {"value": "left"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": -80},
+          "dy": {"value": -80},
+          "fill": {"value": "black"},
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "text": [{"test": "datum['Cases_by_population'] < 0", "value": "⦾"}]
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "linear",
+      "domain": [0, 0.000024, 0.000033, 0.000095, 0.00025],
+      "range": ["#fdbe85", "#fd8d3c", "#e6550d", "#a63603"],
+      "interpolate": "hcl",
+      "zero": true
+    }
+  ],
+  "legends": [
+    {
+      "title": "Total Cases Rate by Population",
+      "fill": "color",
+      "gradientLength": {"signal": "clamp(height, 64, 200)"}
+    }
+  ],
+  "config": {"mark": {"tooltip": true}}
+}
