@@ -1,0 +1,277 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A population pyramid for the India in 2010.",
+  "background": "white",
+  "padding": 5,
+  "title": {"text": [" Murders in India ", " "], "anchor": "start"},
+  "data": [
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/Crime_Murder.csv",
+      "format": {"type": "csv", "delimiter": ","},
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "datum.Sex == 1 ? 'Female' : 'Male'",
+          "as": "Gender"
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {"type": "filter", "expr": "datum[\"Gender\"]===\"Female\""},
+        {
+          "type": "formula",
+          "expr": "datum[\"Area_Name\"]===\"Uttar Pradesh\" ? 0 : datum[\"Area_Name\"]===\"Maharashtra\" ? 1 : datum[\"Area_Name\"]===\"Telangana\" ? 2 : datum[\"Area_Name\"]===\"West Bengal\" ? 3 : datum[\"Area_Name\"]===\"Bihar\" ? 4 : datum[\"Area_Name\"]===\"Madhya Pradesh\" ? 5 : datum[\"Area_Name\"]===\"Odisha\" ? 6 : datum[\"Area_Name\"]===\"Karnataka\" ? 7 : datum[\"Area_Name\"]===\"Assam\" ? 8 : datum[\"Area_Name\"]===\"Chhattisgarh\" ? 9 : datum[\"Area_Name\"]===\"Jharkhand\" ? 10 : datum[\"Area_Name\"]===\"Rajasthan\" ? 11 : datum[\"Area_Name\"]===\"Andhra Pradesh\" ? 12 : datum[\"Area_Name\"]===\"Tamil Nadu\" ? 13 : datum[\"Area_Name\"]===\"Punjab\" ? 14 : datum[\"Area_Name\"]===\"Delhi\" ? 15 : datum[\"Area_Name\"]===\"Gujarat\" ? 16 : datum[\"Area_Name\"]===\"Haryana\" ? 17 : datum[\"Area_Name\"]===\"Kerala\" ? 18 : datum[\"Area_Name\"]===\"Uttarakhand\" ? 19 : datum[\"Area_Name\"]===\"Meghalaya\" ? 20 : datum[\"Area_Name\"]===\"Himachal Pradesh\" ? 21 : datum[\"Area_Name\"]===\"Tripura\" ? 22 : datum[\"Area_Name\"]===\"Manipur\" ? 23 : datum[\"Area_Name\"]===\"Jammu & Kashmir\" ? 24 : datum[\"Area_Name\"]===\"Nagaland\" ? 25 : 26",
+          "as": "y_Area_Name_sort_index"
+        }
+      ]
+    },
+    {
+      "name": "data_1",
+      "source": "data_0",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Area_Name", "Gender"],
+          "ops": ["sum"],
+          "fields": ["Total"],
+          "as": ["sum_Total"]
+        },
+        {
+          "type": "stack",
+          "groupby": ["Area_Name"],
+          "field": "sum_Total",
+          "sort": {"field": ["Gender"], "order": ["ascending"]},
+          "as": ["sum_Total_start", "sum_Total_end"],
+          "offset": "zero"
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"sum_Total\"]) && isFinite(+datum[\"sum_Total\"])"
+        }
+      ]
+    },
+    {
+      "name": "data_2",
+      "source": "source_0",
+      "transform": [
+        {"type": "filter", "expr": "datum[\"Gender\"]===\"Male\""},
+        {
+          "type": "formula",
+          "expr": "datum[\"Area_Name\"]===\"Uttar Pradesh\" ? 0 : datum[\"Area_Name\"]===\"Maharashtra\" ? 1 : datum[\"Area_Name\"]===\"Telangana\" ? 2 : datum[\"Area_Name\"]===\"West Bengal\" ? 3 : datum[\"Area_Name\"]===\"Bihar\" ? 4 : datum[\"Area_Name\"]===\"Madhya Pradesh\" ? 5 : datum[\"Area_Name\"]===\"Odisha\" ? 6 : datum[\"Area_Name\"]===\"Karnataka\" ? 7 : datum[\"Area_Name\"]===\"Assam\" ? 8 : datum[\"Area_Name\"]===\"Chhattisgarh\" ? 9 : datum[\"Area_Name\"]===\"Jharkhand\" ? 10 : datum[\"Area_Name\"]===\"Rajasthan\" ? 11 : datum[\"Area_Name\"]===\"Andhra Pradesh\" ? 12 : datum[\"Area_Name\"]===\"Tamil Nadu\" ? 13 : datum[\"Area_Name\"]===\"Punjab\" ? 14 : datum[\"Area_Name\"]===\"Delhi\" ? 15 : datum[\"Area_Name\"]===\"Gujarat\" ? 16 : datum[\"Area_Name\"]===\"Haryana\" ? 17 : datum[\"Area_Name\"]===\"Kerala\" ? 18 : datum[\"Area_Name\"]===\"Uttarakhand\" ? 19 : datum[\"Area_Name\"]===\"Meghalaya\" ? 20 : datum[\"Area_Name\"]===\"Himachal Pradesh\" ? 21 : datum[\"Area_Name\"]===\"Tripura\" ? 22 : datum[\"Area_Name\"]===\"Manipur\" ? 23 : datum[\"Area_Name\"]===\"Jammu & Kashmir\" ? 24 : datum[\"Area_Name\"]===\"Nagaland\" ? 25 : 26",
+          "as": "y_Area_Name_sort_index"
+        }
+      ]
+    },
+    {
+      "name": "data_3",
+      "source": "data_2",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Area_Name", "Gender"],
+          "ops": ["sum"],
+          "fields": ["Total"],
+          "as": ["sum_Total"]
+        },
+        {
+          "type": "stack",
+          "groupby": ["Area_Name"],
+          "field": "sum_Total",
+          "sort": {"field": ["Gender"], "order": ["ascending"]},
+          "as": ["sum_Total_start", "sum_Total_end"],
+          "offset": "zero"
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"sum_Total\"]) && isFinite(+datum[\"sum_Total\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {"name": "childWidth", "value": 200},
+    {"name": "concat_0_y_step", "value": 20},
+    {
+      "name": "concat_0_height",
+      "update": "bandspace(domain('concat_0_y').length, 0.1, 0.05) * concat_0_y_step"
+    },
+    {"name": "concat_1_y_step", "value": 20},
+    {
+      "name": "concat_1_height",
+      "update": "bandspace(domain('concat_1_y').length, 0.1, 0.05) * concat_1_y_step"
+    }
+  ],
+  "layout": {"padding": 4, "bounds": "full", "align": "each"},
+  "marks": [
+    {
+      "type": "group",
+      "name": "concat_0_group",
+      "title": {"text": "Female", "frame": "group"},
+      "style": "cell",
+      "encode": {
+        "update": {
+          "width": {"signal": "childWidth"},
+          "height": {"signal": "concat_0_height"}
+        }
+      },
+      "marks": [
+        {
+          "name": "concat_0_marks",
+          "type": "rect",
+          "style": ["bar"],
+          "from": {"data": "data_1"},
+          "encode": {
+            "update": {
+              "fill": {"scale": "color", "field": "Gender"},
+              "tooltip": {
+                "signal": "{\"Area Name\": isValid(datum[\"Area_Name\"]) ? datum[\"Area_Name\"] : \"\"+datum[\"Area_Name\"], \"Sum of Total\": format(datum[\"sum_Total\"], \".2f\"), \"Gender\": isValid(datum[\"Gender\"]) ? datum[\"Gender\"] : \"\"+datum[\"Gender\"]}"
+              },
+              "ariaRoleDescription": {"value": "bar"},
+              "description": {
+                "signal": "\"Area Name: \" + (isValid(datum[\"Area_Name\"]) ? datum[\"Area_Name\"] : \"\"+datum[\"Area_Name\"]) + \"; Sum of Total: \" + (format(datum[\"sum_Total\"], \".2f\")) + \"; Gender: \" + (isValid(datum[\"Gender\"]) ? datum[\"Gender\"] : \"\"+datum[\"Gender\"])"
+              },
+              "x": {"scale": "concat_0_x", "field": "sum_Total_end"},
+              "x2": {"scale": "concat_0_x", "field": "sum_Total_start"},
+              "y": {"scale": "concat_0_y", "field": "Area_Name"},
+              "height": {"scale": "concat_0_y", "band": 1}
+            }
+          }
+        }
+      ],
+      "axes": [
+        {
+          "scale": "concat_0_x",
+          "orient": "bottom",
+          "grid": false,
+          "title": "Murders",
+          "format": ".2f",
+          "labelFlush": true,
+          "labelOverlap": true,
+          "tickCount": {"signal": "ceil(childWidth/40)"},
+          "zindex": 0
+        },
+        {
+          "scale": "concat_0_y",
+          "orient": "left",
+          "grid": false,
+          "title": "Area Name",
+          "zindex": 0
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "name": "concat_1_group",
+      "title": {"text": "Male", "frame": "group"},
+      "style": "cell",
+      "encode": {
+        "update": {
+          "width": {"signal": "childWidth"},
+          "height": {"signal": "concat_1_height"}
+        }
+      },
+      "marks": [
+        {
+          "name": "concat_1_marks",
+          "type": "rect",
+          "style": ["bar"],
+          "from": {"data": "data_3"},
+          "encode": {
+            "update": {
+              "fill": {"scale": "color", "field": "Gender"},
+              "tooltip": {
+                "signal": "{\"Area Name\": isValid(datum[\"Area_Name\"]) ? datum[\"Area_Name\"] : \"\"+datum[\"Area_Name\"], \"Murders\": format(datum[\"sum_Total\"], \".2f\"), \"Gender\": isValid(datum[\"Gender\"]) ? datum[\"Gender\"] : \"\"+datum[\"Gender\"]}"
+              },
+              "ariaRoleDescription": {"value": "bar"},
+              "description": {
+                "signal": "\"Area Name: \" + (isValid(datum[\"Area_Name\"]) ? datum[\"Area_Name\"] : \"\"+datum[\"Area_Name\"]) + \"; Murders: \" + (format(datum[\"sum_Total\"], \".2f\")) + \"; Gender: \" + (isValid(datum[\"Gender\"]) ? datum[\"Gender\"] : \"\"+datum[\"Gender\"])"
+              },
+              "x": {"scale": "concat_1_x", "field": "sum_Total_end"},
+              "x2": {"scale": "concat_1_x", "field": "sum_Total_start"},
+              "y": {"scale": "concat_1_y", "field": "Area_Name"},
+              "height": {"scale": "concat_1_y", "band": 1}
+            }
+          }
+        }
+      ],
+      "axes": [
+        {
+          "scale": "concat_1_x",
+          "orient": "bottom",
+          "grid": false,
+          "title": "Murders",
+          "format": ".2f",
+          "labelFlush": true,
+          "labelOverlap": true,
+          "tickCount": {"signal": "ceil(childWidth/40)"},
+          "zindex": 0
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {
+        "fields": [
+          {"data": "data_1", "field": "Gender"},
+          {"data": "data_3", "field": "Gender"}
+        ],
+        "sort": true
+      },
+      "range": ["#F1C40F", "#1f77b4"]
+    },
+    {
+      "name": "concat_0_x",
+      "type": "linear",
+      "domain": [0, 3600],
+      "range": [0, {"signal": "childWidth"}],
+      "reverse": true,
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "concat_0_y",
+      "type": "band",
+      "domain": {
+        "data": "data_0",
+        "field": "Area_Name",
+        "sort": {"op": "min", "field": "y_Area_Name_sort_index"}
+      },
+      "range": {"step": {"signal": "concat_0_y_step"}},
+      "paddingInner": 0.1,
+      "paddingOuter": 0.05
+    },
+    {
+      "name": "concat_1_x",
+      "type": "linear",
+      "domain": [0, 3600],
+      "range": [0, {"signal": "childWidth"}],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "concat_1_y",
+      "type": "band",
+      "domain": {
+        "data": "data_2",
+        "field": "Area_Name",
+        "sort": {"op": "min", "field": "y_Area_Name_sort_index"}
+      },
+      "range": {"step": {"signal": "concat_1_y_step"}},
+      "paddingInner": 0.1,
+      "paddingOuter": 0.05
+    }
+  ],
+  "legends": [{"fill": "color", "symbolType": "square", "title": "Gender"}],
+  "config": {
+    "mark": {"tooltip": true},
+    "axis": {"grid": false},
+    "style": {"cell": {"stroke": null}}
+  }
+}
