@@ -1,5 +1,4 @@
 ﻿Area_Name,Year,Sex,0-10,15-18,18-30,30-50,50_above,Total
-Ladakh,2010,Female,-1,-1,-1,-1,-1,-1
 Andaman & Nicobar Islands,2010,Female,0,2,0,3,0,5
 Telangana,2010,Female,15,6,235,213,143,624
 Andhra Pradesh,2010,Female,15,6,235,213,143,624
@@ -34,7 +33,6 @@ Tripura,2010,Female,0,0,24,30,8,63
 Uttar Pradesh,2010,Female,62,47,421,243,56,859
 Uttarakhand,2010,Female,0,2,25,11,6,44
 West Bengal,2010,Female,2,2,542,308,36,893
-Ladakh,2010,Male,-1,-1,-1,-1,-1,-1
 Andaman & Nicobar Islands,2010,Male,0,0,2,3,0,5
 Telangana,2010,Male,7,13,962,591,325,1914
 Andhra Pradesh,2010,Male,7,13,962,591,325,1914
@@ -104,4 +102,3 @@ Tripura,2010,3. Total,0,0,60,73,24,159
 Uttar Pradesh,2010,3. Total,138,126,2358,1408,344,4456
 Uttarakhand,2010,3. Total,0,2,91,63,19,176
 West Bengal,2010,3. Total,2,6,1177,1102,120,2415
-Ladakh,2010,3. Total,-1,-1,-1,-1,-1,-1
