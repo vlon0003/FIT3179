@@ -1,0 +1,64 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Murder Victim ratio: ",
+  "background": "white",
+  "padding": 5,
+  "width": 200,
+  "height": 200,
+  "style": "cell",
+  "encode": {"update": {"stroke": {"value": null}}},
+  "data": [
+    {
+      "name": "source_0",
+      "values": [
+        {"Gender": "Men", "value": 79},
+        {"Gender": "Women", "value": 21}
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"value\"]) && isFinite(+datum[\"value\"])"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "marks",
+      "type": "arc",
+      "style": ["arc"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "innerRadius": {"value": 50},
+          "fill": [
+            {"test": "datum['value']<79", "value": "#ffe033"},
+            {"value": "#4c78a8"}
+          ],
+          "description": {
+            "signal": "\"value: \" + (format(datum[\"value\"], \"\"))"
+          },
+          "x": {"signal": "width", "mult": 0.5},
+          "y": {"signal": "height", "mult": 0.5},
+          "outerRadius": {"signal": "min(width,height)/2"},
+          "startAngle": {"scale": "theta", "field": "value"},
+          "endAngle": {"scale": "theta", "value": 0}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "theta",
+      "type": "linear",
+      "domain": {"data": "data_0", "field": "value"},
+      "range": [0, 6.283185307179586],
+      "zero": true
+    }
+  ],
+  "config": {}
+}
