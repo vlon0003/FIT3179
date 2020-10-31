@@ -52,6 +52,9 @@
   </style>
 </head>
 <body>
+  
+  <h2>Total Criminal cases registered in India for each region:</h2>
+   <div id="vis4"  class="vis-container"></div>
 
  <div class="page">
 
@@ -101,7 +104,8 @@
 <script type="text/javascript">
   var specVis1 = "js/map2.vg.json";
   var specVis2= "js/map_crime.vg.json";
-  var specVis3= "js/dumbell.vg.json";        
+  var specVis3= "js/dumbell.vg.json";
+  var specVis4= "js/bar_total.vg.json";
 
   vegaEmbed('#vis1', specVis1, {"actions": false}).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
@@ -112,6 +116,10 @@
   }).catch(console.error);
 
   vegaEmbed('#vis3', specVis3, {"actions": false}).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+  
+    vegaEmbed('#vis4', specVis3, {"actions": false}).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 </script>
