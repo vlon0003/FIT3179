@@ -1,0 +1,217 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 800,
+  "height": 600,
+  "title": {"text": "Total Cases for each area in India ", "frame": "group"},
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/vlon0003/FIT3179/main/data/Total_Cases2.csv",
+      "format": {
+        "type": "csv",
+        "parse": {"Total_Cases": "number"},
+        "delimiter": ","
+      },
+      "transform": [
+        {"type": "filter", "expr": "datum.Total_Cases > 0"},
+        {
+          "type": "filter",
+          "expr": "Zone_name == null || datum.Zone == Zone_name"
+        }
+      ]
+    },
+    {
+      "name": "data_1",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["STATE", "Total_Cases"],
+          "ops": ["max"],
+          "fields": ["Total_Cases"],
+          "as": ["max_Total_Cases"]
+        },
+        {
+          "type": "stack",
+          "groupby": ["STATE"],
+          "field": "max_Total_Cases",
+          "sort": {"field": ["Total_Cases"], "order": ["ascending"]},
+          "as": ["max_Total_Cases_start", "max_Total_Cases_end"],
+          "offset": "zero"
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"Total_Cases\"]) && isFinite(+datum[\"Total_Cases\"])"
+        }
+      ]
+    },
+    {
+      "name": "data_2",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Total_Cases", "STATE"],
+          "ops": ["max"],
+          "fields": ["Total_Cases"],
+          "as": ["max_Total_Cases"]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"max_Total_Cases\"]) && isFinite(+datum[\"max_Total_Cases\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "Zone_name",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "North",
+          "South",
+          "East",
+          "West",
+          "North East",
+          "Central",
+          "Bay of Bengal"
+        ],
+        "labels": [
+          "Show All",
+          "North",
+          "South",
+          "East",
+          "West",
+          "North East",
+          "Central",
+          "Bay of Bengal"
+        ],
+        "name": "Zone Selection: "
+      }
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "rect",
+      "style": ["bar"],
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "fill": {"scale": "color", "field": "Total_Cases"},
+          "tooltip": {
+            "signal": "{\"Total Cases\": format(datum[\"Total_Cases\"], \"\"), \"Area\": isValid(datum[\"STATE\"]) ? datum[\"STATE\"] : \"\"+datum[\"STATE\"]}"
+          },
+          "ariaRoleDescription": {"value": "bar"},
+          "description": {
+            "signal": "\"Area: \" + (isValid(datum[\"STATE\"]) ? datum[\"STATE\"] : \"\"+datum[\"STATE\"]) + \"; Total Cases: \" + (format(datum[\"max_Total_Cases\"], \"\"))"
+          },
+          "x": {"scale": "x", "field": "max_Total_Cases_end"},
+          "x2": {"scale": "x", "field": "max_Total_Cases_start"},
+          "y": {"scale": "y", "field": "STATE"},
+          "height": {"scale": "y", "band": 1}
+        }
+      }
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "text",
+      "style": ["text"],
+      "from": {"data": "data_2"},
+      "encode": {
+        "update": {
+          "dx": {"value": 16},
+          "dy": {"value": 3},
+          "fill": {"value": "black"},
+          "tooltip": {
+            "signal": "{\"Total Cases\": format(datum[\"Total_Cases\"], \"\"), \"Area\": isValid(datum[\"STATE\"]) ? datum[\"STATE\"] : \"\"+datum[\"STATE\"]}"
+          },
+          "description": {
+            "signal": "\"Total_Cases: \" + (format(datum[\"Total_Cases\"], \"\")) + \"; Area: \" + (isValid(datum[\"STATE\"]) ? datum[\"STATE\"] : \"\"+datum[\"STATE\"]) + \"; Total Cases: \" + (format(datum[\"max_Total_Cases\"], \"\"))"
+          },
+          "x": {"scale": "x", "field": "max_Total_Cases"},
+          "y": {"scale": "y", "field": "STATE", "band": 0.5},
+          "text": {"signal": "format(datum[\"Total_Cases\"], \"\")"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": {"fields": [[0, 6500], [0, 6600]]},
+      "range": [0, {"signal": "width"}],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {
+        "data": "source_0",
+        "field": "STATE",
+        "sort": {"op": "max", "field": "Total_Cases"}
+      },
+      "range": [0, {"signal": "height"}],
+      "paddingInner": 0.1,
+      "paddingOuter": 0.05
+    },
+    {
+      "name": "color",
+      "type": "linear",
+      "domain": [0, 6600],
+      "range": {"scheme": "yelloworangered"},
+      "interpolate": "hcl",
+      "zero": true
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Total Cases",
+      "labelFlush": true,
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Area",
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "title": "Total Cases",
+      "fill": "color",
+      "gradientLength": {"signal": "clamp(height, 64, 200)"}
+    }
+  ],
+  "config": {"mark": {"tooltip": true}}
+}
