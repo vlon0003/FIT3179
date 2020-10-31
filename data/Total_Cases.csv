@@ -1,6 +1,6 @@
 ﻿STATE,YEAR,Pupose,Total_Cases,Male_0-10,Female_0-10,Male_10-15,Female_10-15,Male_15-18,Female_15-18,Male_18-30,Female_18-30,Male_30-50,Female_30-50,Male_above50,Female_above_50,Total_Male,Total_Female,Grand_Total,Cases_by_population
 Andhra Pradesh,2010,Total,2053,15,39,14,136,20,357,283,749,177,240,13,10,522,1531,2053,0.00002
-Arunachal Pradesh,2010,Total,67,0,0,0,5,0,0,17,34,4,7,0,0,21,46,67,0.00049
+Arunachal Pradesh,2010,Total,67,0,0,0,5,0,0,17,34,4,7,0,0,21,46,67,0.000049
 Assam,2010,Total,3250,0,0,0,5,0,12,325,2168,158,582,0,0,483,2767,3250,0.0001
 Bihar,2010,Total,3674,23,1,58,64,112,1101,817,1312,103,91,1,0,1114,2569,3683,0.000035
 Chhattisgarh,2010,Total,359,5,7,14,49,15,96,28,115,17,12,1,0,80,279,359,0.000014
