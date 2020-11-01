@@ -226,7 +226,7 @@
         ],
         "sort": true
       },
-      "range": ["#EB984E ", "#BA4A00 "]
+      "range": ["#EB984E ", "#a63603 "]
     },
     {
       "name": "concat_0_x",
