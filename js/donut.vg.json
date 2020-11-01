@@ -37,7 +37,7 @@
           "innerRadius": {"value": 50},
           "fill": [
             {"test": "datum['value']<79", "value": "#EB984E"},
-            {"value": "#BA4A00 "}
+            {"value": "#a63603 "}
           ],
           "description": {
             "signal": "\"value: \" + (format(datum[\"value\"], \"\"))"
